@@ -51,7 +51,7 @@ const ClientReports: React.FC<ClientReportsProps> = ({ reports, clientInfo, owne
 
                 <p><strong>Responsable:</strong> {report.user}</p>
                 <p><strong>Data informe:</strong> {report.report_date}</p>
-                <p><strong>Resum Informe:</strong> {report.summary}</p>
+                <p><strong>Resum Informe:</strong><br /> {report.summary}</p>
 
                 {report.tests && report.tests.length > 0 ? (
                 <div className="p-3 mt-4 rounded-md">
@@ -71,7 +71,7 @@ const ClientReports: React.FC<ClientReportsProps> = ({ reports, clientInfo, owne
                                 </div>
                                 <strong>Descripció:</strong> {test.description} <br />
                                 <strong>Data:</strong> {test.pivot.test_date} <br />
-                                <strong>Resultat:</strong> {test.pivot.result}
+                                <strong>Resultat:</strong> <br /> {test.pivot.result}
                             </li>
                         ))}
                     </ul>

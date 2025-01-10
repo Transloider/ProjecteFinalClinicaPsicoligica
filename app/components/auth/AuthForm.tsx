@@ -1,6 +1,5 @@
 import { Form, Link } from "@remix-run/react"
 import React from "react";
-
 const ClientForm: React.FC = () => {
     return (
         <div className="flex justify-center items-center min-h-screen">
@@ -9,7 +8,7 @@ const ClientForm: React.FC = () => {
                 className="flex flex-col rounded-lg bg-gray-100 p-6 shadow-md w-full max-w-md"
                 id="client-form"
             >
-                <h1 className="text-xl text-black font-bold text-center">Login</h1>
+                <h1 className="text-xl text-black font-bold text-center">Login Treballadors</h1>
                 <label htmlFor="email" className="text-lg text-black font-semibold">
                     Email
                 </label>

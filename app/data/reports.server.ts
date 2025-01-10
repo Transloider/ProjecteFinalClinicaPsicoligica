@@ -96,7 +96,7 @@ export async function deleteReport(request: Request, reportID: string) {
 export async function getPDF(request: Request, reportID: string) {
     try {
         const token = await getUserForSession(request);
-        const response = await fetch(`http://localhost/report/pdf/${reportID}`, {
+        const response = await fetch(`http://localhost/api/report/pdf/${reportID}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -107,11 +107,8 @@ export async function getPDF(request: Request, reportID: string) {
             throw new Error("Error getting report");
         }
         const data = await response.json();
-        const link = document.createElement('a');
-        link.href = data.pdf_url;
-        link.target = '_blank';
-        link.download = `Informe-${reportID}.pdf`;
-        link.click();
+        console.log(data.pdf_url);
+        return data.pdf_url;
     } catch (error) {
         console.log(error);
     }

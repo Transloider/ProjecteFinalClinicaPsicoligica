@@ -34,12 +34,19 @@ export async function login({ email, password }: SignupInput) {
 }
 
 export async function requireUserSession(request: Request) {
-    const userId = await getUserForSession(request);
-    if (!userId) {
-      // Si no hi ha cap identificador d'usuari, redirigim a la pàgina d'autenticació
+    const token = await getUserForSession(request);
+    if (!token) {
       throw redirect("/auth");
     }
-    return userId;
+    return token;
+}
+
+export async function requireClientSession(request: Request) {
+  const token = await getClientForSession(request);
+  if (!token) {
+    throw redirect("/");
+  }
+  return token;
 }
 
 export async function getUserForSession(request: Request) {
@@ -58,7 +65,23 @@ export async function getUserForSession(request: Request) {
         console.log(error);
     }
 }
-export async function getUserID(request: Request){
+export async function getClientForSession(request: Request) {
+  try {
+      const session = await sessionClientStorage.getSession(
+        request.headers.get("Cookie"),
+      );
+
+      const token = session.get("client_token") as string;
+      if (!token) {
+        return null;
+      }else {
+        return token;
+      }
+  } catch (error) {
+      console.log(error);
+  }
+}
+export async function getUserID(request: Request): Promise<string>{
     try {
         const session = await sessionStorage.getSession(
           request.headers.get("Cookie"),
@@ -66,13 +89,31 @@ export async function getUserID(request: Request){
 
         const user_id = session.get("user_id") as string;
         if (!user_id) {
-          return null;
+          return "";
         }else {
           return user_id;
         }
     } catch (error) {
         console.log(error);
+        return "";
     }
+}
+export async function getClientID(request: Request): Promise<string>{
+  try {
+      const session = await sessionClientStorage.getSession(
+        request.headers.get("Cookie"),
+      );
+
+      const user_id = session.get("client_id") as string;
+      if (!user_id) {
+        return "";
+      }else {
+        return user_id;
+      }
+  } catch (error) {
+      console.log(error);
+      return "";
+  }
 }
 //FUNCIONALITAT COOKIES
 
@@ -82,6 +123,17 @@ export const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+    maxAge: 30 * 24 * 60 * 60, 
+    path: "/",
+  },
+});
+
+export const sessionClientStorage = createCookieSessionStorage({
+  cookie: {
+    name: "client_token", 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: "lax", 
     maxAge: 30 * 24 * 60 * 60, 
     path: "/",
   },

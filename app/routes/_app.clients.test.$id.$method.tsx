@@ -45,20 +45,22 @@ export async function action({ request }: ActionFunctionArgs) {
             if (!valid) {
                 return {errors}
             }
-            await addTest(request, reportID as string, test_id as string, summary as string, date as string);
+            const client_id = await addTest(request, reportID as string, test_id as string, summary as string, date as string);
+            return redirect(`/clients/${client_id}`);
+
     
         } else if(request.method == "PUT") {
             const {valid, errors} = clientTestUpdateValidator(clientTest);
             if (!valid) {
                 return {errors}
             }
-            await updateTest(request,clientTestID as string, summary as string, date as string);
+            const client_id = await updateTest(request,clientTestID as string, summary as string, date as string);
+            return redirect(`/clients/${client_id}`);
         }
     } catch (error) {
         console.log('Error POST/PUT test', error);
 
     }
-    return redirect(`/clients`);
 }
 
 export default function TestUpdate() {

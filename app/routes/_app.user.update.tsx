@@ -1,4 +1,4 @@
-import { redirect, useActionData, useOutletContext, useNavigation } from '@remix-run/react';
+import { redirect, useActionData, useNavigation, useOutletContext } from '@remix-run/react';
 import UserForm from '../components/user/UserForm';
 import { ActionFunctionArgs } from '@remix-run/node';
 import { User } from '../types/interfaces';
@@ -27,7 +27,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 const UserUpdate = () => {
-    const user = useOutletContext<User>();
+    const outletData = useOutletContext<{users: User[], user_id:string}>();
+    const user = outletData.users.find(({id}) => id === Number(outletData.user_id));
     const actionData = useActionData<{ errors?: Record<string, string> }>();
     const transition = useNavigation();
 

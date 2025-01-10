@@ -16,10 +16,11 @@ export async function addTest(request: Request ,report_id: string, test_id: stri
                 test_date: test_date
             }),
         });
-        console.log(response);
         if (!response.ok) {
             throw new Error("Error adding the report");
         }
+        const data = await response.json();
+        return data.client_id;
     } catch (error) {
         console.log(error);
     }
@@ -63,6 +64,10 @@ export async function updateTest(request: Request,clientTestID: string, summary:
         if (!response.ok) {
             throw new Error("Error update client test");
         }
+        
+        const data = await response.json();
+        console.log(data);
+        return data.client_id;
     } catch (error) {
         console.log(error);
     }

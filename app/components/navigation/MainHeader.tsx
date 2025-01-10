@@ -19,7 +19,7 @@ const MainHeader: React.FC = () => {
               to="/"
               className={({ isActive }) =>
                 isActive
-                  ? "text-pink-300"
+                  ? "text-blue-300"
                   : "transition-colors duration-300 hover:text-gray-400"
               }
             >

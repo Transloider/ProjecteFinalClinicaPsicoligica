@@ -3,10 +3,9 @@ import { ReportFormProps } from "../../types/interfaces";
 
 const ReportForm: React.FC<ReportFormProps> = (reportForm) => {
     const matches = useMatches();
-    const matchedRoute = matches.find((match) => match.id === "routes/_app.clients.report.$id.$mode");
-    console.log(matchedRoute);
+    const matchedRoute = matches.find((match) => match.id === "routes/_app.clients.report.$id.$method");
     let summary;
-    if (matchedRoute?.params?.mode === "update") {
+    if (matchedRoute?.params?.method === "update") {
       summary = matchedRoute?.data?.reportSummary;
     }
 

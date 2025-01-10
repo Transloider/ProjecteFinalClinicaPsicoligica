@@ -56,7 +56,7 @@ export default function Client() {
                     <Dialog.Title className="font-bold text-xl">{clientInfo.name}</Dialog.Title>
                     <Dialog.Description>
                         <p>Email: {clientInfo.email}</p>
-                        <p>Data Neixament: {clientInfo.born_date}</p>
+                        <p>Data Naixement: {clientInfo.born_date}</p>
                         <p>Sexe: {clientInfo.gender == "Female"? "Femení": clientInfo.gender == "Male"? "Masculí": "Other"}</p>
                     </Dialog.Description>
                     <button onClick={() => setIsOpen(false)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Tancar</button>

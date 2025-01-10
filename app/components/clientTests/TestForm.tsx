@@ -39,11 +39,13 @@ const ReportForm: React.FC<TestFormProps> = ({ tests, testPassed, error, report_
             onChange={handleTestChange}
           >
             <option value="select">Selecciona</option>
-            {tests.map((test: Test) => (
+            {tests
+              .filter((test: Test) => test.quantity > 0)
+              .map((test: Test) => (
                 <option key={test.id} value={test.id}>
-                {test.name}
+                  {test.name}
                 </option>
-            ))}
+              ))}
           </select>
         </>
       }

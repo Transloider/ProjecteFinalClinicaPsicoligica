@@ -1,5 +1,6 @@
+import { redirect } from '@remix-run/react';
 import { Client, UserAndReport } from '../types/interfaces';
-import { sessionStorage } from './auth.server';
+import { sessionClientStorage, sessionStorage } from './auth.server';
 export async function getClients(userToken: string): Promise<Client[]> {
     try {
         const response = await fetch(`http://localhost/api/clients`,{
@@ -86,7 +87,7 @@ export async function getClientReports(client_id: string, request: Request): Pro
     }
 }
 
-export async function addClient(token: string, name: string, email: string, address:string, gender: string, born_date:string, phone:string): Promise<Client> {
+export async function addClient(token: string, name: string, email: string, address:string, gender: string, born_date:string, phone:string, username: string, password:string): Promise<Client> {
     try {
         const response = await fetch('http://localhost/api/client', {
             method: 'POST',
@@ -100,7 +101,9 @@ export async function addClient(token: string, name: string, email: string, addr
                 address,
                 gender,
                 born_date,
-                phone
+                phone,
+                username,
+                password,
             }),
         });
         
@@ -122,3 +125,40 @@ export async function addClient(token: string, name: string, email: string, addr
         }
     }
 }
+
+export async function login(username: string, password:string) {
+    try {
+        const response = await fetch('http://localhost/api/client/login', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username,
+                password,
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error("Error adding the report");
+        }
+        const data = await response.json();
+        const client_id = data.client.id.toString();
+        const redirectUrl = `/users/${client_id}`;
+        console.log(data.token);
+        const session = await sessionClientStorage.getSession();
+        session.set("client_token", data.token); 
+        session.set("client_id", client_id);
+        const setCookie = await sessionClientStorage.commitSession(session);
+
+        return redirect(redirectUrl, {
+            headers: {
+                "Set-Cookie": setCookie,
+            },
+            status: 302,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+

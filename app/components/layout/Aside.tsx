@@ -1,7 +1,8 @@
 import { Link } from "@remix-run/react";
 import { useState } from "react";
+import { AsideProps } from "../../types/interfaces";
 
-const Aside = () => {
+const Aside: React.FC<AsideProps> = (asideProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -84,10 +85,45 @@ const Aside = () => {
         </li>
         <li>
           <div className="flex flex-row items-center gap-2">
+            <i className="fa-solid fa-calendar"></i>
+            <Link to="/calendar">
+              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
+                Calendari
+              </button>
+            </Link>
+          </div>
+        </li>
+        {
+          asideProps.isAdmin === true?   
+          <li>
+            <div className="flex flex-row items-center gap-2">
+            <i className="fa-solid fa-file-invoice"></i>
+              <Link to={"/user/migrate"}>
+                <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
+                  Migrar Informes
+                </button>
+              </Link>
+            </div>
+          </li>
+          :
+          null
+        }
+        <li>
+          <div className="flex flex-row items-center gap-2">
+            <i className="fa-solid fa-address-book"></i>
+            <Link to="/message/users">
+              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
+                Missatges
+              </button>
+            </Link>
+          </div>
+        </li>
+        <li>
+          <div className="flex flex-row items-center gap-2">
             <i className="fa-solid fa-gear"></i>
             <Link to="/user/update">
               <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
-                Configuració
+                Configuració del perfil
               </button>
             </Link>
           </div>

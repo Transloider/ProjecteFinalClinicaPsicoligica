@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface Client {
     id?: number;
     name: string;
@@ -6,6 +8,8 @@ export interface Client {
     gender?: 'Male' | 'Female' | 'Other';
     born_date: string;
     phone: string;
+    username?: string;
+    password?: string;
     created_at?: string;
     updated_at?: string;
 }
@@ -51,6 +55,32 @@ export interface User {
     remember_token?: string,
     created_at?: string,
     updated_at?: string
+}
+
+export interface Event {
+    id?: number,
+    description: string;
+    event_date: string;
+    title:string,
+    clientID: string,
+    userID: string,
+    client?: Client,
+    user?: User,
+}
+export interface Migration {
+    oldUser: string,
+    newUser: string,
+}
+export interface Message {
+    id?: number,
+    userID: string,
+    clientID: string,
+    message: string,
+    sender_type: 'client' | 'user',
+    edited: 0 | 1,
+    read_at?: string,
+    created_at?: string,
+    updated_at?: string,
 }
 export interface CredentialsInput {
     email: string;
@@ -101,4 +131,50 @@ export interface UserFormProps {
     user?: User,
     error?: { errors?: Record<string, string> };
     isSubmitting?: boolean;
+}
+export interface UserMigrationFormProps {
+    users?: User[],
+    user: string,
+    error?: { errors?: Record<string, string> };
+    isSubmitting?: boolean;
+}
+export interface CalendarFormProps {
+    clients?: Client[];
+    error?: { errors?: Record<string, string> };
+    isSubmitting?: boolean;
+}
+export interface CalendarEventsProps {
+    events: Event[];
+}
+export interface UserChatFormProps {
+    clients: Client[]
+}
+export interface AsideProps {
+    isAdmin: boolean;
+}
+export interface UserClientMessages{
+    user: User,
+    clients: [
+        {
+            id:string,
+            name: string,
+        }
+    ],
+}
+export interface ClientUserMessages{
+    client: Client,
+    users: [
+        {
+            id:string,
+            name: string,
+        }
+    ],
+}
+export interface ModalProps {
+  children: ReactNode;
+  onClose: () => void;
+}
+export interface LoginClient {
+    username: string;
+    password: string;
 }

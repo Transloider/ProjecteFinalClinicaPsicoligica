@@ -14,6 +14,8 @@ export async function action({ request }: ActionFunctionArgs) {
     const gender = formData.get("gender") as "Male" | "Female" | "Other" | undefined;
     const born_date = formData.get("born_date") as string;
     const phone = formData.get("phone") as string;
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
 
     const client: Client = {
         name,
@@ -21,9 +23,10 @@ export async function action({ request }: ActionFunctionArgs) {
         address,
         gender,
         born_date,
-        phone
+        phone,
+        username,
+        password
     }
-
     const  { valid, errors } = clientValidator(client);
     if (!valid) {
         return {errors};
@@ -41,7 +44,7 @@ export async function action({ request }: ActionFunctionArgs) {
         return {error: "Token is required"};
     }
     try {
-        const client: Client = await addClient(token as string, name as string, email as string, address as string, gender as string, born_date as string, phone as string);
+        const client: Client = await addClient(token as string, name as string, email as string, address as string, gender as string, born_date as string, phone as string, username as string, password as string);
         return redirect(`/clients/${client.id}`);
     } catch (error) {
         console.log('Create report',error);
@@ -85,6 +88,17 @@ export default function CreateClient() {
                     <option value="Other" selected>Altres</option>
                 </select>
                 {actionData?.errors?.gender && <p className="text-red-500 text-sm">{actionData.errors.gender}</p>}
+
+                <div className="p-3 border rounded my-3">
+                    <h2 className="text-xl">Iniciar Sessió Chat</h2>
+                    <label htmlFor="username">Nom d&apos;usuari</label>
+                    <input type="text" name="username" className="border border-gray-300 rounded w-full p-2 mb-1 text-white" required/>
+                    {actionData?.errors?.username && <p className="text-red-500 text-sm">{actionData.errors.username}</p>}
+                    
+                    <label htmlFor="password">Password</label>                    
+                    <input type="password" name="password" className="border border-gray-300 rounded w-full p-2 mb-1 text-white" required/>
+                    {actionData?.errors?.password && <p className="text-red-500 text-sm">{actionData.errors.password}</p>}
+                </div>
                 <button 
                     type="submit" 
                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"

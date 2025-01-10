@@ -24,7 +24,7 @@ export async function getTests(request: Request){
 
 export async function removeTest(request: Request, testID: string){
     try {
-        const token = getUserForSession(request);
+        const token = await getUserForSession(request);
         const response = await fetch(`http://localhost/api/tests/${testID}`,{
             method: "delete", 
             headers: {
@@ -32,11 +32,10 @@ export async function removeTest(request: Request, testID: string){
                 "Content-Type": "application/json",  
             }
         });
+        console.log(response);
         if (!response.ok) {
-            throw new Error("Error getting tests");
+            throw new Error("Error delete tests");
         }
-        const data = await response.json();
-        return data.data;
     } catch (error) {
         console.log(error);
     }

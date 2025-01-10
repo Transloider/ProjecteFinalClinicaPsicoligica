@@ -1,4 +1,4 @@
-import { CredentialsInput, ValidationErrors } from "../types/interfaces";
+import { CredentialsInput, Event, ValidationErrors } from "../types/interfaces";
 
 function isValidEmail(value: string): boolean {
     return value.trim().includes("@");
@@ -23,5 +23,5 @@ export function validateCredentials(input: CredentialsInput): void {
     if (Object.keys(validationErrors).length > 0) {
       throw validationErrors;
     }
-  }
+}
   

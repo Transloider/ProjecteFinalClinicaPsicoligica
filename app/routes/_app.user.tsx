@@ -1,26 +1,26 @@
 import { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, useLoaderData } from '@remix-run/react';
-import { requireUserSession,getUserID } from '../data/auth.server';
-import { getUser } from '../data/user.server';
+import { getUserID, requireUserSession } from '../data/auth.server';
+import { getUsers } from '../data/user.server';
 import { User } from '../types/interfaces';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
     await requireUserSession(request);
+    const users: User[] = await getUsers(request);
     const user_id = await getUserID(request);
-    const user: User = await getUser(request, user_id as string);
-    return user;
+    return {users, user_id};
   } catch (error) {
     throw new Response('Error loading clients', { status: 500 });
   }
 }
 
 const Users = () => {
-  const user = useLoaderData<User>();
+  const {users, user_id} = useLoaderData<{users: User[], user_id: string}>();
   return (
     <>
       <div className='mt-[4rem]'>
-        <Outlet context={user}/>
+        <Outlet context={{users, user_id}}/>
       </div>
     </>
   );

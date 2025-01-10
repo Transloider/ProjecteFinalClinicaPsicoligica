@@ -1,7 +1,8 @@
 import { ActionFunctionArgs } from "@remix-run/node";
-import { Form, useMatches } from "@remix-run/react";
+import { Form, redirect, useMatches } from "@remix-run/react";
 import { Test } from "../types/interfaces";
 import { testRemoveValidator } from "../utils/validators";
+import { removeTest } from "../data/tests.server";
 
 export async function action({ request }: ActionFunctionArgs) {
     const formData = await request.formData();
@@ -11,7 +12,8 @@ export async function action({ request }: ActionFunctionArgs) {
         if (!valid) {
             return {errors}
         } else{
-            //
+            await removeTest(request,testID);
+            return redirect('/clients')
         }
     } catch (error) {
         console.log("Error removing test", error);
@@ -23,12 +25,12 @@ export default function DeleteTest() {
     const matchedRoute = useMatches();
     const tests = (matchedRoute.find(
         (match) => match.id === "routes/_app.tests"
-      ));
+    ));
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         const confirmMessage =
             "Estàs segur que vols eliminar aquest test? Aquesta acció no es pot desfer.";
         if (!window.confirm(confirmMessage)) {
-            e.preventDefault(); // Cancelar el envío si el usuario no confirma
+            e.preventDefault();
         }
     };
     return (
