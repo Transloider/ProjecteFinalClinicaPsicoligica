@@ -11,9 +11,9 @@ export async function action({ request }: ActionFunctionArgs) {
     const clientID = formData.get("clientID");
 
     try {
-        const pdfUrl = await getPDF(request, reportID as string);
+        await getPDF(request, reportID as string);
 
-        return redirect(`/pdf-viewer?pdfUrl=${encodeURIComponent(pdfUrl)}`);
+        return redirect(`/client/${clientID}`);
     } catch (error) {
         console.log(error);
         return redirect(`/clients/${clientID}`);

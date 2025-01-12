@@ -42,23 +42,45 @@ export async function getUser(request: Request, user_id: string): Promise<User> 
     }
 }
 
-export async function addUser(request: Request, user: User): Promise<void> {
+export async function addUser(request: Request, user: User) {
     try {
         const token = await getUserForSession(request);
-        await fetch("http://localhost/api/users", {
+        const response = await fetch("http://localhost/api/users", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify({
+                name: user.name,
+                username: user.username,
+                email: user.email,
+                phone: user.phone,
+                password: user.password
+            }),
         });
+        console.log(response);
+        if (!response.ok) {
+            throw new Error("Error adding user");
+        }
+        const data = await response.json();
+        if (data.id == 1 || data.id == 2) {
+            return data.message
+        }
+        return data.data;
     } catch (error) {
         console.log("Error adding user", error);
+        return {
+            name: "",
+            username: "",
+            email: "",
+            phone: "",
+            admin: "",
+        };
     }
 }
 
-export async function updateUser(request: Request, user: User): Promise<void> {
+export async function updateUser(request: Request, user: User) {
     try {
         const token = await getUserForSession(request);
         const response = await fetch(`http://localhost/api/users/${user.id}`, {
@@ -76,6 +98,10 @@ export async function updateUser(request: Request, user: User): Promise<void> {
         });
         if (!response.ok) {
             throw new Error("Error updating user");            
+        }
+        const data = await response.json();
+        if (data.id == 1 || data.id == 2) {
+            return data.message;
         }
     } catch (error) {
         console.log("Error updating user", error);

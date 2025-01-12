@@ -33,6 +33,9 @@ const UserForm: React.FC<UserFormProps> = ({user,error, isSubmitting}) => {
             {
                 user? <input type="hidden" name="user_id" value={user?.id}/> : null
             }
+            
+            {error?.server && <p className="text-red-500 text-sm">{error?.server}</p>}
+
             <button
                 type="submit"
                 disabled={isSubmitting}

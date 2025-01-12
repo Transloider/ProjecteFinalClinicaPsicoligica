@@ -5,23 +5,28 @@ import { getClientChats } from '../data/messages.server';
 import { ClientUserMessages } from '../types/interfaces';
 import ClientChatList from '../components/messages/ClientChatList';
 
-export async function loader({ request,params }: LoaderFunctionArgs) {
+// La funció loader s'executa al servidor per obtenir les dades necessàries
+export async function loader({ request, params }: LoaderFunctionArgs) {
   try {
-    const{id} = params;
+    const { id } = params; // Obtenim l'ID de la ruta (client)
+    // Verifiquem que el client té una sessió activa
     await requireClientSession(request);
+    // Obtenim els missatges de xat del client
     const userNamesMessages = await getClientChats(request, id as string);
-    return {userNamesMessages};
+    return { userNamesMessages };
   } catch (error) {
+    // Si hi ha un error en obtenir els missatges, llancem un error
     throw new Error("Error getting Messages");
-    
   }
 }
 
 const MensajesList = () => {
-  const dataLoaderData = useLoaderData<{userNamesMessages: ClientUserMessages}>();
+  // Obtenim les dades carregades pel loader
+  const dataLoaderData = useLoaderData<{ userNamesMessages: ClientUserMessages }>();
   return (
     <>
-      <ClientChatList userClientsChat={dataLoaderData.userNamesMessages}/>
+      {/* Renderitzem la llista de converses del client amb el component ClientChatList */}
+      <ClientChatList userClientsChat={dataLoaderData.userNamesMessages} />
     </>
   );
 };

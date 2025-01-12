@@ -6,25 +6,30 @@ import TestForm from "../components/clientTests/TestForm";
 import { ClientTest, Test } from "../types/interfaces";
 import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 
-export const loader: LoaderFunction = async ({ request,params }) => {
+// Funció que es carrega abans de renderitzar la pàgina
+export const loader: LoaderFunction = async ({ request, params }) => {
     try {
+        // Obtenim els tests disponibles
         const tests = await getTests(request);
         
         const {id, method} = params;
         if (method == "add") {
+            // Si el mètode és 'add', retornem la informació necessària per afegir un test
             return {tests, id};
         } else if (method == "update") {
-            const clientTest = await getClientTest(request,id as string)
-            return {tests,clientTest};
+            // Si el mètode és 'update', obtenim les dades del test del client per actualitzar-lo
+            const clientTest = await getClientTest(request, id as string);
+            return {tests, clientTest};
         } else {
-            throw new Error("Invalid method");
+            throw new Error("Mètode invàlid"); // Error si el mètode no és 'add' ni 'update'
         }
     } catch (error) {
         console.log(error);
-        return null;
+        return null; // Retornem null en cas d'error
     }
 };
 
+// Funció per gestionar les accions POST i PUT
 export async function action({ request }: ActionFunctionArgs) {
     const formData = await request.formData();
     const summary = formData.get("summary") as string;
@@ -38,47 +43,46 @@ export async function action({ request }: ActionFunctionArgs) {
         test_id: test_id,
         result: summary,
         test_date: date,
-    }
+    };
+
     try {
         if (request.method == "POST") {
+            // Validació del test abans de guardar-lo
             const {valid, errors} = clientTestValidator(clientTest);
             if (!valid) {
-                return {errors}
+                return {errors}; // Retornem els errors si la validació falla
             }
             const client_id = await addTest(request, reportID as string, test_id as string, summary as string, date as string);
-            return redirect(`/clients/${client_id}`);
-
-    
+            return redirect(`/clients/${client_id}?message=Test%20associat%20correctament!`);
         } else if(request.method == "PUT") {
+            // Validació per actualitzar el test
             const {valid, errors} = clientTestUpdateValidator(clientTest);
             if (!valid) {
-                return {errors}
+                return {errors}; // Retornem els errors si la validació falla
             }
-            const client_id = await updateTest(request,clientTestID as string, summary as string, date as string);
-            return redirect(`/clients/${client_id}`);
+            const client_id = await updateTest(request, clientTestID as string, summary as string, date as string);
+            return redirect(`/clients/${client_id}?message=Test%20del%20client%20modificat%20correctament!`);
         }
     } catch (error) {
-        console.log('Error POST/PUT test', error);
-
+        console.log('Error POST/PUT test', error); // Gestió d'errors en cas de fallida
     }
 }
 
+// Component principal per a la vista d'actualització del test
 export default function TestUpdate() {
-    const {tests, clientTest, id} = useLoaderData<{tests: Test[], clientTest?: Test, id?: string}>();
+    const { tests, clientTest, id } = useLoaderData<{ tests: Test[], clientTest?: Test, id?: string }>();
     const actionData = useActionData<{ errors?: Record<string, string> }>();
     const transition = useNavigation();
-    const isSubmitting = transition.state === "submitting";
+    const isSubmitting = transition.state === "submitting"; // Comprovem si el formulari s'està enviant
     return (
        <>
             <TestForm 
-            tests={tests}
-            testPassed={clientTest}
-            error={actionData?.errors}
-            report_id={id}
-            isSubmitting={isSubmitting}
+            tests={tests} // Llista de tests
+            testPassed={clientTest} // Test actual (si existeix)
+            error={actionData?.errors} // Errors de validació
+            report_id={id} // ID del report
+            isSubmitting={isSubmitting} // Estat d'enviament del formulari
             />
        </>
     );
 }
-
-

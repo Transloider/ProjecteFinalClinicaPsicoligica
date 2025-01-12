@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AsideProps } from "../../types/interfaces";
 
 const Aside: React.FC<AsideProps> = (asideProps) => {
+  console.log(asideProps);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -17,7 +18,7 @@ const Aside: React.FC<AsideProps> = (asideProps) => {
           <div className="flex flex-row items-center gap-2">
             <i className="fa-solid fa-house"></i>
             <Link to={"/clients"}>
-              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
+              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="home">
                 Home
               </button>
             </Link>
@@ -27,7 +28,7 @@ const Aside: React.FC<AsideProps> = (asideProps) => {
           <div className="flex flex-row items-center gap-2">
             <i className="fa-regular fa-user"></i>
             <Link to={"/clients/addClient"}>
-              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
+              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="add client">
                 Afegir nou client
               </button>
             </Link>
@@ -39,6 +40,7 @@ const Aside: React.FC<AsideProps> = (asideProps) => {
             <button
               onClick={toggleDropdown}
               className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none"
+              aria-label="tests dropdown"
             >
               Tests
               <i
@@ -54,7 +56,7 @@ const Aside: React.FC<AsideProps> = (asideProps) => {
               <div className="flex flex-row items-center gap-2">
                   <i className="fa-solid fa-plus"></i>
                   <Link to="/tests/add">
-                    <button className="text-gray-300 hover:text-gray-100 focus:outline-none">
+                    <button className="text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="add test">
                       Afegir
                     </button>
                   </Link>
@@ -64,7 +66,7 @@ const Aside: React.FC<AsideProps> = (asideProps) => {
                 <div className="flex flex-row items-center gap-2">
                   <i className="fa-solid fa-pencil"></i>
                   <Link to="/tests/update">
-                    <button className="text-gray-300 hover:text-gray-100 focus:outline-none">
+                    <button className="text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="update test">
                       Modificar
                     </button>
                   </Link>
@@ -74,7 +76,7 @@ const Aside: React.FC<AsideProps> = (asideProps) => {
                 <div className="flex flex-row items-center gap-2">
                   <i className="fa-solid fa-trash"></i>
                   <Link to="/tests/delete">
-                    <button className="text-gray-300 hover:text-gray-100 focus:outline-none">
+                    <button className="text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="eliminar test">
                       Eliminar
                     </button>
                   </Link>
@@ -87,32 +89,17 @@ const Aside: React.FC<AsideProps> = (asideProps) => {
           <div className="flex flex-row items-center gap-2">
             <i className="fa-solid fa-calendar"></i>
             <Link to="/calendar">
-              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
+              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="calendar">
                 Calendari
               </button>
             </Link>
           </div>
         </li>
-        {
-          asideProps.isAdmin === true?   
-          <li>
-            <div className="flex flex-row items-center gap-2">
-            <i className="fa-solid fa-file-invoice"></i>
-              <Link to={"/user/migrate"}>
-                <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
-                  Migrar Informes
-                </button>
-              </Link>
-            </div>
-          </li>
-          :
-          null
-        }
         <li>
           <div className="flex flex-row items-center gap-2">
             <i className="fa-solid fa-address-book"></i>
             <Link to="/message/users">
-              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
+              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="messages">
                 Missatges
               </button>
             </Link>
@@ -122,12 +109,43 @@ const Aside: React.FC<AsideProps> = (asideProps) => {
           <div className="flex flex-row items-center gap-2">
             <i className="fa-solid fa-gear"></i>
             <Link to="/user/update">
-              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none">
+              <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="user config">
                 Configuració del perfil
               </button>
             </Link>
           </div>
         </li>
+        {
+          asideProps.isAdmin === true?   
+          <>
+            
+            <div className="border-b pb-1">
+              <p>Funcionalitats Admin</p>
+            </div>
+            <li>
+              <div className="flex flex-row items-center gap-2">
+              <i className="fa-solid fa-file-invoice"></i>
+                <Link to={"/user/migrate"}>
+                  <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="migrate user reports">
+                    Migrar Informes
+                  </button>
+                </Link>
+              </div>
+            </li>
+            <li>
+            <div className="flex flex-row items-center gap-2">
+              <i className="fa-duotone fa-solid fa-user-tie"></i>
+              <Link to={"/clients/addUser"}>
+                <button className="w-full text-left text-gray-300 hover:text-gray-100 focus:outline-none" aria-label="add user">
+                  Afegir Treballador
+                </button>
+              </Link>
+            </div>
+          </li>
+          </>
+          :
+          null
+        }
       </ul>
     </aside>
   );

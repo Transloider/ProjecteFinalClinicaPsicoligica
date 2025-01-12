@@ -10,22 +10,28 @@ function UsersClientList({ userClientsChat }: { userClientsChat: UserClientMessa
                     <i className="fa-solid fa-user-plus text-2xl"></i>
                 </Link>
             </div>
-            {userClientsChat.clients.map((client) => (
-                <Link to={`/message/chat/${client.id}`} key={client.id}>
-                    <div 
-                        className="flex justify-between items-center mb-4 p-4 w-full text-black bg-slate-100 hover:bg-gray-300 transition-colors duration-200 rounded"
-                    >
-                        <div className="flex items-center space-x-4">
-                            <div className="bg-blue-500 text-white rounded-full h-10 w-10 flex items-center justify-center">
-                                {client.name.charAt(0)}
-                            </div>
-                            <div>
-                                <span className="block font-bold text-lg">{client.name}</span>
+            {userClientsChat.clients.length === 0 ? (
+                <div className="text-center text-gray-500">
+                    En afegir una nova conversa amb un usuari apareixerà aquí
+                </div>
+            ) : (
+                userClientsChat.clients.map((client) => (
+                    <Link to={`/message/chat/${client.id}`} key={client.id}>
+                        <div 
+                            className="flex justify-between items-center mb-4 p-4 w-full text-black bg-slate-100 hover:bg-gray-300 transition-colors duration-200 rounded"
+                        >
+                            <div className="flex items-center space-x-4">
+                                <div className="bg-blue-500 text-white rounded-full h-10 w-10 flex items-center justify-center">
+                                    {client.name.charAt(0)}
+                                </div>
+                                <div>
+                                    <span className="block font-bold text-lg">{client.name}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Link>
-            ))}
+                    </Link>
+                ))
+            )}
         </main>
     </>
     );

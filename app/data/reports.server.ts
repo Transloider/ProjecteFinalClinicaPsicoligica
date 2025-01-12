@@ -1,4 +1,4 @@
-import { getUserForSession, sessionStorage } from "./auth.server";
+import { getUserForSession, getUserID, sessionStorage } from "./auth.server";
 
 export async function createReport(summary :string, clientID: string, userID:string , token: string) {
     try {
@@ -95,8 +95,9 @@ export async function deleteReport(request: Request, reportID: string) {
 
 export async function getPDF(request: Request, reportID: string) {
     try {
+        const user_id = await getUserID(request);
         const token = await getUserForSession(request);
-        const response = await fetch(`http://localhost/api/report/pdf/${reportID}`, {
+        const response = await fetch(`http://localhost/api/report/pdf/${reportID}/${user_id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -106,9 +107,6 @@ export async function getPDF(request: Request, reportID: string) {
         if (!response.ok) {
             throw new Error("Error getting report");
         }
-        const data = await response.json();
-        console.log(data.pdf_url);
-        return data.pdf_url;
     } catch (error) {
         console.log(error);
     }

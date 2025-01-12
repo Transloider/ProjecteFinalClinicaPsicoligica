@@ -87,7 +87,7 @@ export async function getClientReports(client_id: string, request: Request): Pro
     }
 }
 
-export async function addClient(token: string, name: string, email: string, address:string, gender: string, born_date:string, phone:string, username: string, password:string): Promise<Client> {
+export async function addClient(token: string, name: string, email: string, address:string, gender: string, born_date:string, phone:string, username: string, password:string) {
     try {
         const response = await fetch('http://localhost/api/client', {
             method: 'POST',
@@ -106,12 +106,14 @@ export async function addClient(token: string, name: string, email: string, addr
                 password,
             }),
         });
-        
         if (!response.ok) {
-            throw new Error("Error adding the report");
+            throw new Error("Error adding the client");
         }
 
         const data = await response.json();
+        if(data.id == 1 || data.id == 2){
+            return data.message;
+        }
         return data.client
     } catch (error) {
         console.log(error);
@@ -143,6 +145,9 @@ export async function login(username: string, password:string) {
             throw new Error("Error adding the report");
         }
         const data = await response.json();
+        if (data.id == 1) {
+            return data.message
+        }
         const client_id = data.client.id.toString();
         const redirectUrl = `/users/${client_id}`;
         console.log(data.token);

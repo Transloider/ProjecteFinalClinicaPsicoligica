@@ -7,7 +7,7 @@ function UsersClientList({ userClientsChat }: { userClientsChat: ClientUserMessa
         <main className="px-[5rem] pt-[4rem]">
             <div className="flex flex-row justify-between">
                 <h1 className="text-2xl mb-4">Missatges - {userClientsChat.client.name}</h1>
-                <Form>
+                <Form method="POST" action="/clientLogout">
                     <button>
                         <i className="fa-solid fa-right-from-bracket text-2xl"></i>
                     </button>
@@ -30,6 +30,12 @@ function UsersClientList({ userClientsChat }: { userClientsChat: ClientUserMessa
                         </div>
                     </Link>
                 ))}
+            {userClientsChat.users.length === 0 && (
+                <div className="text-center text-gray-500 mt-4">
+                    <hr />
+                    <p className="mt-4">Actualment no tens cap xat amb cap treballador. Espera a que contacti amb tu.</p>
+                </div>
+            )}
             </div>
         </main>
     </>

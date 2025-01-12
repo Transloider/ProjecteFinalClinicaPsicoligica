@@ -3,6 +3,7 @@ import {  CalendarFormProps } from "../../types/interfaces";
 import { useEffect, useState } from "react";
 
 const CalendarForm: React.FC<CalendarFormProps> = (formProps) => {
+  //per fer que no puguis seleccionar apartir d'avui cap endarrere
   const [today, setToday] = useState("");
 
   useEffect(() => {

@@ -1,6 +1,9 @@
-import { Form, Link } from "@remix-run/react"
+import { Form } from "@remix-run/react"
 import React from "react";
-const ClientForm: React.FC = () => {
+interface AuthPageProps {
+    error?: string;
+}
+const ClientForm: React.FC<AuthPageProps> = (formProps) => {
     return (
         <div className="flex justify-center items-center min-h-screen">
             <Form
@@ -9,13 +12,13 @@ const ClientForm: React.FC = () => {
                 id="client-form"
             >
                 <h1 className="text-xl text-black font-bold text-center">Login Treballadors</h1>
-                <label htmlFor="email" className="text-lg text-black font-semibold">
-                    Email
+                <label htmlFor="username" className="text-lg text-black font-semibold">
+                    Email/Username
                 </label>
                 <input
-                    type="email"
-                    name="email"
-                    id="email"
+                    type="text"
+                    name="user"
+                    id="user"
                     className="rounded-lg border border-gray-300 p-2"
                 />
                 <label htmlFor="password" className="text-lg text-black font-semibold">
@@ -27,18 +30,13 @@ const ClientForm: React.FC = () => {
                     id="password"
                     className="rounded-lg border border-gray-300 p-2"
                 />
+                {formProps.error ? <p className="text-red-600">{formProps.error}</p> : null}
                 <button
                     type="submit"
                     className="bg-blue-500 text-white rounded-lg p-2 mt-4"
                 >
                     Iniciar Sessió
                 </button>
-                <Link
-                    to="/signup"
-                    className="text-blue-500 text-lg font-semibold mt-4 text-center"
-                >
-                    No tens un compte? Registrar
-                </Link>
             </Form>
         </div>
     )

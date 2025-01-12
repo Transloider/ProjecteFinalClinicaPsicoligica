@@ -53,11 +53,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export function ErrorBoundary() {
-  console.log("ErrorBoundary");
   const error = useRouteError();
-
-  let title = "An error occurred";
-  let message = "Something went wrong. Please try again later.";
+  let title = "S'ha produït un error";
+  let message = "Alguna cosa ha anat malament. Si us plau, torna-ho a intentar més tard.";
 
   if (isRouteErrorResponse(error)) {
     title = error.statusText;

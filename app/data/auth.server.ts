@@ -1,16 +1,27 @@
 import { redirect } from "@remix-run/react";
 import { SignupInput } from "../types/interfaces";
 import { createCookieSessionStorage } from "@remix-run/node";
+import { isEmailValidator } from "../utils/validators";
 
-export async function login({ email, password }: SignupInput) {
+export async function login({ user, password }: SignupInput) {
+    let username: string | undefined;
+    let email: string | undefined;
+    isEmailValidator(user) === true ? email = user : username = user;
+    const bodyData = email
+    ? { email, password }
+    : { username, password };
+
     const response = await fetch("http://localhost/api/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(bodyData),
     });
-
+    if(response.status == 401){
+      const data = await response.json();
+      return {credentials: data.message }
+    }
     if (!response.ok) {
         console.error("Login failed:", response.status, await response.text());
         throw new Error("Invalid credentials");
@@ -148,6 +159,16 @@ export async function destroyUserSession(request: Request) {
             "Set-Cookie": await sessionStorage.destroySession(session),
         },
     });
+}
+export async function destroyClientSession(request: Request) {
+  const session = await sessionClientStorage.getSession(
+  request.headers.get("Cookie"),
+  );
+  return redirect("/", {
+      headers: {
+          "Set-Cookie": await sessionClientStorage.destroySession(session),
+      },
+  });
 }
 // export async function signup({ email, password }: SignupInput) {
 //     // 1. Comprovar si l'usuari ja existeix a la taula 'users'

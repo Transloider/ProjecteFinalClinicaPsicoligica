@@ -1,22 +1,48 @@
 import { Link, useOutletContext } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ClientListItem from "../components/clients/ClientListItem";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Client } from "../types/interfaces";
 
 function ClientsList() {
-  const { clients } = useOutletContext<{
-    clients: Array<{ id: number; name: string; email: string; phone: string; born_date: string; address: string }>;
+  // Obtenim dades del context: llista de clients i missatge d'èxit
+  const contextData = useOutletContext<{
+    clients: Client[];
+    successMessage?: string;
   }>();
-
   const [filter, setFilter] = useState("");
 
-  const filteredClients = clients.filter((client) =>
-    client.name.toLowerCase().startsWith(filter.toLowerCase())
-  );
+  // Filtra els clients segons el text introduït
+  const filteredClients = Array.isArray(contextData.clients)
+    ? contextData.clients.filter((client) =>
+        client.name.toLowerCase().startsWith(filter.toLowerCase())
+      )
+    : [];
+
+  // Mostra una notificació si hi ha un missatge d'èxit
+  useEffect(() => {
+    if (contextData.successMessage) {
+      toast.success(contextData.successMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }, [contextData.successMessage]);
 
   return (
     <>
       <div className="w-5/4 items-center justify-center flex flex-col">
+        {/* Barra de filtratge */}
         <div className="bg-white p-3 rounded-b-lg flex items-center text-black w-3/4">
+          {/* Notificació dels missatges */}
+          <ToastContainer className="mt-4" />
+          
           <div className="mr-3 flex items-center">
             <i className="fa-regular fa-user"></i>
             <span className="ml-1">{filteredClients.length}</span>
@@ -33,9 +59,13 @@ function ClientsList() {
             />
           </div>
         </div>
+        {/* Llista de clients */}
         <ol id="clients-list" className="mx-auto my-2 w-3/4">
           {filteredClients.map((client) => (
-            <li key={client.id} className="my-6 flex items-baseline justify-between rounded-lg bg-white text-black">
+            <li
+              key={client.id}
+              className="my-6 flex items-baseline justify-between rounded-lg bg-white text-black"
+            >
               <Link to={`${client.id}`} className="block w-full p-3">
                 <ClientListItem
                   id={client.id}

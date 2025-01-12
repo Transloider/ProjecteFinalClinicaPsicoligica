@@ -94,7 +94,7 @@ export type ValidationErrors = {
     date?: string;
 };
 export interface SignupInput {
-    email: string;
+    user: string;
     password: string;
 }
 export interface UserAndReport {

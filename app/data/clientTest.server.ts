@@ -60,14 +60,32 @@ export async function updateTest(request: Request,clientTestID: string, summary:
                 test_date: date,
             }),
         });
-        console.log(response);
         if (!response.ok) {
             throw new Error("Error update client test");
         }
         
         const data = await response.json();
-        console.log(data);
         return data.client_id;
+    } catch (error) {
+        console.log(error);
+    }
+}
+export async function deleteClientTest(request: Request, id: string) {
+    try {
+        const token = await getUserForSession(request);
+        const response = await fetch(`http://localhost/api/clientTests/${id}`, {
+            method: 'delete',
+            headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            throw new Error("Error update client test");
+        }
+        
+        const data = await response.json();
+        return data.client;
     } catch (error) {
         console.log(error);
     }
